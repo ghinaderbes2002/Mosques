@@ -98,7 +98,7 @@ class _MosqueCardState extends State<MosqueCard> {
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
                             color: _currentImageIndex == index
-                                ? Colors.blueAccent
+                                ? AppColors.primary
                                 : Colors.grey[300],
                           ),
                         );
