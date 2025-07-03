@@ -8,15 +8,24 @@ import 'package:mosques/view/screen/auth/signUp.dart';
 import 'package:mosques/view/screen/home.dart';
 import 'package:mosques/view/screen/mainHome.dart';
 import 'package:mosques/view/screen/onboarding.dart';
-
 import 'package:mosques/view/screen/mosquesHistorical%20.dart';
 
 List<GetPage<dynamic>>? routes = [
+// GetPage(
+//     name: '/',
+//     page: () => Container(),
+//     middlewares: [OnBoardingMiddleware()],
+//   ),
 
+  // GetPage(
+  //   name: '/',
+  //   page: () => const OnBoarding(),
+  //   middlewares: [OnBoardingMiddleware()],
+  // ),
 
 GetPage(
     name: '/',
-    page: () => Container(), 
+    page: () => const SizedBox.shrink(), // أي Widget صغير
     middlewares: [OnBoardingMiddleware()],
   ),
 
@@ -43,7 +52,6 @@ GetPage(
   GetPage(
     name: AppRoute.login,
     page: () => const Login(),
-
   ),
   GetPage(
     name: AppRoute.home,
