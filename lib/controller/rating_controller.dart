@@ -12,13 +12,15 @@ abstract class RatingController extends GetxController {
 }
 
 class RatingControllerimp extends RatingController {
-  // List<RatingModel> ratings = [];
-  // var isLoading = true.obs;
+  var ratings = <RatingModel>[].obs; // هذا مهم!
+  var isLoading = true.obs;
 
   double selectedRating = 0;
   String? comment;
 
-  @override
+
+  
+@override
   @override
   Future<void> addRating(String mosqueId) async {
     try {
@@ -30,20 +32,18 @@ class RatingControllerimp extends RatingController {
         return;
       }
 
-      // تحويل JSON إلى كائن مستخدم
       final Map<String, dynamic> userMap = jsonDecode(userJson);
       final UsersModel currentUser = UsersModel.fromJson(userMap);
       final int userId = currentUser.id;
 
-      // بناء كائن التقييم
-      final rating = RatingModel(
+    final rating = RatingModel(
         ratingValue: selectedRating.toInt(),
-        comment: comment,
+comment: comment ?? "",
         mosqueId: int.parse(mosqueId),
         userId: userId,
       );
 
-      // تحويل التقييم إلى JSON
+
       final ratingJson = rating.toJson();
       print("Rating JSON: $ratingJson");
 
@@ -54,33 +54,27 @@ class RatingControllerimp extends RatingController {
       );
 
       print("Response status: ${response.statusCode}");
-      print("Response body: ${response.data}");
+      print("Response data: ${response.data}");
 
-      // تحقق من الاستجابة بشكل كامل
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        // تحقق مما إذا كانت الاستجابة تحتوي على رسالة النجاح أو حالة معينة
-        if (response.data != null) {
-          print("Response Data: ${response.data}");
+   final state = response.data['state']?.toString();
+      final message = response.data['msg']?.toString();
 
-          // مثال: إذا كانت الاستجابة تحتوي على رسالة "تم التقييم مسبقًا" أو شيء مشابه
-          if (response.data['message'] == 'تم التقييم مسبقًا') {
-            Get.snackbar("تنبيه", "لقد قمت بتقييم هذا المسجد من قبل");
-          } else {
-            Get.snackbar("نجاح", "تم إرسال التقييم بنجاح");
-            Get.back();
-          }
-        } else {
-          Get.snackbar("خطأ", "الاستجابة فارغة أو غير معروفة");
-        }
+      if (state == 'duplicate') {
+        Get.snackbar("تنبيه", "لقد قمت بتقييم هذا المسجد من قبل");
+      } else if (state == 'success') {
+        Get.snackbar(
+            "نجاح", "تم التقييم بنجاح"); 
+        Get.back();
       } else {
-        // في حالة فشل الاستجابة
-        Get.snackbar("خطأ", "فشل في إرسال التقييم\n${response.data}");
+        Get.snackbar("ملاحظة", message ?? "تمت العملية");
       }
+
     } catch (e) {
       print("Error sending rating: $e");
       Get.snackbar("خطأ", "حدث خطأ أثناء إرسال التقييم: $e");
     }
   }
+
 
   @override
   Future<List<RatingModel>> fetchRatings(String mosqueId) async {
@@ -108,6 +102,31 @@ class RatingControllerimp extends RatingController {
     //   update(); // تحديث GetBuilder
     // }
   }
+
+@override
+  Future<void> fetchRatingsandcomment(String mosqueId) async {
+    isLoading.value = true;
+    try {
+      ApiClient apiClient = ApiClient();
+      final response = await apiClient.getData(
+        url: '$serverLink/mosque/mosques/$mosqueId/ratings',
+      );
+
+      if (response.statusCode == 200) {
+        final List<dynamic> data = response.data['ratings'];
+        ratings.value = data.map((json) => RatingModel.fromJson(json)).toList();
+      } else {
+        ratings.clear();
+        throw Exception("فشل في تحميل التقييمات");
+      }
+    } catch (e) {
+      ratings.clear();
+      print("Error fetching ratings: $e");
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
 
   double calculateAverageRating(List<RatingModel> ratings) {
     if (ratings.isEmpty) return 0.0;

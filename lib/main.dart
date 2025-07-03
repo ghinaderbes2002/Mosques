@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:mosques/core/costant/App_routes.dart';
 import 'package:mosques/core/services/SharedPreferences.dart';
 import 'package:mosques/core/them/app_colors.dart';
 import 'package:mosques/routes.dart';
@@ -26,6 +27,7 @@ class MyApp extends StatelessWidget {
       ),
       // home: const MyHomePage(title: 'Flutter Demo Home Page'),
       getPages: routes,
+      
       
     );
   }

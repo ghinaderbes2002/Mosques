@@ -22,7 +22,7 @@ class Homecontrollerimp extends Homecontroller {
   Staterequest staterequest = Staterequest.none;
 
   final List<MosquesModel> mosquesList = [];
-  List filteredMosques = [];
+  List<MosquesModel> filteredMosques = [];
   var mosqueDetails = Rxn<MosquesModel>(); // لعرض تفاصيل المسجد
 
 

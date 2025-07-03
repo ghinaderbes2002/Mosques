@@ -22,74 +22,57 @@ class LoginControllerImp extends LoginController {
 
   bool isPasswordHidden = true;
 
-  @override
+ @override
   login() async {
     ApiClient apiClient = ApiClient();
     if (formState.currentState!.validate()) {
       staterequest = Staterequest.loading;
       update();
+
       try {
-        ApiResponse<dynamic> postResponse =
-            await apiClient.postData(url: '$serverLink/auth/user_login', data: {
-          'name_user': name.text.trim(),
-          'password': password.text.trim(),
-        });
+        ApiResponse<dynamic> postResponse = await apiClient.postData(
+          url: '$serverLink/auth/user_login',
+          data: {
+            'name_user': name.text.trim(),
+            'password': password.text.trim(),
+          },
+        );
+
         print('POST Response Data: ${postResponse.data}');
         print("Status Code: ${postResponse.statusCode}");
-        print("Response Data: ${postResponse.data}");
-
-        //       if ((postResponse.statusCode == 200 || postResponse.statusCode == 201) &&
-        //  postResponse.data["state"].toString().toLowerCase().trim() == "success") {
-
-        // final userData = postResponse.data["user"]; // تأكد من اسم المفتاح حسب الاستجابة
-        // if (userData != null) {
-        //   UsersModel currentUser = UsersModel.fromJson(userData);
-
-        //   // خزّن المستخدم محلياً
-        //   final prefs = await SharedPreferences.getInstance();
-        //   prefs.setString("user", jsonEncode(currentUser.toJson()));
-
-        //   // خزّن userId في SharedPreferences
-        //   prefs.setString("userId", currentUser.userId.toString());
-
-        //   print("تم حفظ بيانات المستخدم: ${currentUser.nameUser}");
-        // }
-
-        // print("نجاح تسجيل الدخول");
-        // Get.offAll(() => const MainHome());
-// }
 
         if ((postResponse.statusCode == 200 ||
                 postResponse.statusCode == 201) &&
             postResponse.data["state"].toString().toLowerCase().trim() ==
                 "success") {
-          final userData =
-              postResponse.data["user"]; // تأكد من اسم المفتاح حسب الاستجابة
+          final userData = postResponse.data["user"];
           if (userData != null) {
             UsersModel currentUser = UsersModel.fromJson(userData);
 
-            // // خزّن المستخدم محلياً
-            // final prefs = await SharedPreferences.getInstance();
-            // prefs.setString("user", jsonEncode(currentUser.toJson()));
-
             final myServices = Get.find<MyServices>();
+            // 🔐 تخزين بيانات المستخدم
             myServices.sharedPref
                 .setString("user", jsonEncode(currentUser.toJson()));
+                  myServices.sharedPref.setBool("isLoggedIn", true); // ✅ أضف هذا
 
-            print("تم حفظ بيانات المستخدم: ${currentUser.nameUser}");
+
+            print("✅ تم حفظ بيانات المستخدم: ${currentUser.nameUser}");
           }
 
-          print("نجاح تسجيل الدخول");
+          print("✅ نجاح تسجيل الدخول");
           Get.offAll(() => const MainHome());
+        } else {
+          Get.snackbar("فشل", "اسم المستخدم أو كلمة المرور غير صحيحة");
         }
       } catch (error) {
-        Get.snackbar("خطأ", "حدث خطأ غير متوقع:");
+        Get.snackbar("خطأ", "حدث خطأ غير متوقع: $error");
       } finally {
         staterequest = Staterequest.none;
         update();
       }
     }
   }
+
 
   void togglePasswordVisibility() {
     isPasswordHidden = !isPasswordHidden;

@@ -4,6 +4,7 @@ class AppRoute {
   static const String home = "/home";
   static const String profile = "/profile";
   static const String mosquesHistorical = "/mosquesHistorical";
+  static const String mainHome = "/mainHome";
 
   static const String onBoarding = "/onboarding";
 }

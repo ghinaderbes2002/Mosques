@@ -21,40 +21,6 @@ class SignUpControllerImp extends SignUpController {
 
   bool isPasswordHidden = true;
 
-//   @override
-//   signup() async {
-//         ApiClient apiClient = ApiClient();
-//    if (formState.currentState!.validate()) {
-//        staterequest = Staterequest.loading;
-//       update();
-//      try {
-//         ApiResponse<dynamic> postResponse = await apiClient.postData(
-//           url: '$serverLink/auth/user_register',
-//           data: {
-//            'name_user': name.text.trim(),
-//            'email':email.text.trim(),
-//            'password': password.text.trim(),
-//            'phone_number': phone.text.trim(),
-//           }
-//         );
-//         print('POST Response Data: ${postResponse.data}');
-//         if (postResponse.statusCode == 201 && postResponse.data["state"] == "success") {
-//         Get.offAllNamed(AppRoute.home);
-// } else {
-//   Get.snackbar("خطأ", postResponse.data["msg"] ?? "فشل التسجيل");
-// }
-
-//       }
-//         catch (error) {
-//   print("Signup error: $error");
-//   Get.snackbar("خطأ", "حدث خطأ غير متوقع: $error");
-// }
-//       finally {
-//        staterequest = Staterequest.none;
-//         update();
-//       }
-//     }
-//   }
 
   @override
   signup() async {
@@ -64,7 +30,8 @@ class SignUpControllerImp extends SignUpController {
       update();
       try {
         ApiResponse<dynamic> postResponse = await apiClient
-            .postData(url: '$serverLink/auth/user_register', data: {
+            .postData(url: '$serverLink/auth/user_register', 
+            data: {
           'name_user': name.text.trim(),
           'email': email.text.trim(),
           'password': password.text.trim(),

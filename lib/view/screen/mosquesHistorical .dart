@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:mosques/controller/home_controller.dart';
 import 'package:mosques/controller/rating_controller.dart';
 import 'package:mosques/core/costant/App_images.dart';
+import 'package:mosques/core/costant/App_link.dart';
 import 'package:mosques/core/data/model/rating_model.dart';
 import 'package:mosques/view/screen/mosqueDetails.dart';
 import 'package:mosques/view/widget/mosqueCard.dart';
@@ -75,7 +76,17 @@ class HistoricalMosques extends StatelessWidget {
 
                                 return MosqueCard(
                                   title: mosque.nameMosque ?? "No Name",
-                                  imageUrl: AppImage.mosque1,
+                                  imageUrls: [
+                                    if (mosque.mosqueImages != null &&
+                                        mosque.mosqueImages!.length > 1)
+                                      '${serverLink}${mosque.mosqueImages![1].imageUrl}',
+                                    if (mosque.mosqueImages != null &&
+                                        mosque.mosqueImages!.length > 2)
+                                      '${serverLink}${mosque.mosqueImages![2].imageUrl}',
+                                    if (mosque.mosqueImages != null &&
+                                        mosque.mosqueImages!.length > 3)
+                                      '${serverLink}${mosque.mosqueImages![3].imageUrl}',
+                                  ],
                                   address: mosque.address ?? "No Address",
                                   phone: mosque.phoneNumber ?? "",
                                   showActivitiesAndServices: false,
